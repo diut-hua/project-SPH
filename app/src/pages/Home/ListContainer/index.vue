@@ -115,6 +115,7 @@ export default {
   watch: {
     //监听bannerList数据的变化：因为这条数据发生过变化----由空数组变为数组里面有四个元素
     bannerList: {
+      immediate: true,
       handler(newValue, oldValue) {
         //现在咱们通过watch监听bannerList属性的属性值的变化
         //如果执行handler方法，代表组件实例身上这个属性的属性值已经有了【数组：四个元素】
