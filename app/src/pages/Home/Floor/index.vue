@@ -27,23 +27,8 @@
               <img :src="list.imgUrl" />
             </div>
             <div class="floorBanner">
-              <div class="swiper-container" ref="cur">
-                <div class="swiper-wrapper">
-                  <div
-                    class="swiper-slide"
-                    v-for="(carousel, index) in list.carouselList"
-                    :key="carousel.id"
-                  >
-                    <img :src="carousel.imgUrl" />
-                  </div>
-                </div>
-                <!-- 如果需要分页器 -->
-                <div class="swiper-pagination"></div>
-
-                <!-- 如果需要导航按钮 -->
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-              </div>
+              <!-- 轮播图的地方 -->
+              <Carousel :list="list.carouselList"/>
             </div>
             <div class="split">
               <span class="floor-x-line"></span>
@@ -74,8 +59,6 @@
 </template>
 
 <script>
-//引入Swiper
-import Swiper from "swiper";
 
 export default {
   name: "",
@@ -86,40 +69,7 @@ export default {
     //第一次书写轮播图的时候，实在当前组件内部发请求、动态渲染结构【前台至少服务器数据需要回来】，因此当年的写法在这里不行
     //现在的这种写法为什么可以：因为请求是父组件发的，父组件通过props传递过来的，而且结构都已经有了的情况下执行mounted
   },
-  watch: {
-    list: {
-      //立即监听：不管你数据有没有变化，我上来立即监听一次
-      //为什么watch监听不了大list：因为这个数据从来没有发生变化（数据是父亲给的，父亲给的时候就是一个对象，对象里面该有的数据都是有的）
-      immediate: true,
-      handler() {
-        //只能监听到数据已经有了，但是v-for动态渲染结构我们还是没有办法确定的，因此还是需要用nextTick
-        this.$nextTick(() => {
-          var mySwiper = new Swiper(this.$refs.cur, {
-            // direction: 'vertical', // 垂直切换选项
-            loop: true, // 循环模式选项
 
-            // 如果需要分页器
-            pagination: {
-              el: ".swiper-pagination",
-              //点击小球的时候也切换图片
-              clickable: true,
-            },
-
-            // 如果需要前进后退按钮
-            navigation: {
-              nextEl: ".swiper-button-next",
-              prevEl: ".swiper-button-prev",
-            },
-
-            // 如果需要滚动条
-            scrollbar: {
-              el: ".swiper-scrollbar",
-            },
-          });
-        });
-      },
-    },
-  },
 };
 </script>
 
