@@ -43,25 +43,27 @@
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
-              <!-- 价格结构 -->
+              <!-- 排序结构 -->
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{ active: isOne }" @click="changeOrder('1')">
+                  <a
+                    >综合
+                    <span
+                      v-show="isOne"
+                      class="iconfont"
+                      :class="{ 'icon-up': isAsc, 'icon-down': isDesc }"
+                    ></span
+                  ></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{ active: isTwo }" @click="changeOrder('2')">
+                  <a
+                    >价格
+                    <span
+                      v-show="isTwo"
+                      class="iconfont"
+                      :class="{ 'icon-up': isAsc, 'icon-down': isDesc }"
+                    ></span
+                  ></a>
                 </li>
               </ul>
             </div>
@@ -116,35 +118,7 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <Pagination />
         </div>
       </div>
     </div>
@@ -176,12 +150,12 @@ export default {
         categoryName: "",
         // 关键字
         keyword: "",
-        // 排序
-        order: "",
+        // 排序:初始值状态应该是综合且降序
+        order: "1:desc",
         // 分类器用的：代表的是当前时第几页
         pageNo: 1,
         // 代表的是每一页展示数据的个数
-        pageSize: 5,
+        pageSize: 10,
         // 平台售卖属性操作带的参数
         props: [],
         // 品牌
@@ -212,6 +186,18 @@ export default {
     ...mapGetters({
       goodsList: ["goodsList"],
     }),
+    isOne() {
+      return this.searchParams.order.indexOf("1") != -1;
+    },
+    isTwo() {
+      return this.searchParams.order.indexOf("2") != -1;
+    },
+    isAsc() {
+      return this.searchParams.order.indexOf("asc") != -1;
+    },
+    isDesc() {
+      return this.searchParams.order.indexOf("desc") != -1;
+    },
   },
   methods: {
     //向服务器发请求获取search模块数据（根据参数不同返回不同的数据进行展示）
@@ -270,17 +256,38 @@ export default {
       let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
       //数组去重
       //if语句里面只有一行代码，可以省略大花括号
-      if (this.searchParams.props.indexOf(props) == -1) this.searchParams.props.push(props);
+      if (this.searchParams.props.indexOf(props) == -1)
+        this.searchParams.props.push(props);
       //再次发请求
       this.getData();
     },
     //删除售卖属性
-    removeAttr(index){
+    removeAttr(index) {
       //再次整理参数
       this.searchParams.props.splice(index, 1);
       //再次发请求
       this.getData();
-    }
+    },
+    //排序的操作
+    changeOrder(flag) {
+      //flag形参：它是一个标记，代表用户点击的是综合（1）还是价格（2）[用户点击的时候传递进来的]
+      let originOrder = this.searchParams.order;
+      //这里获取的是最开始的状态
+      let originFlag = originOrder.split(":")[0];
+      let originSort = originOrder.split(":")[1];
+      //准备一个新的order的属性值
+      let newOrder = "";
+      //判断多次点击的是不是同一个按钮
+      if (flag == originFlag) {
+        newOrder = `${originFlag}:${originSort == "desc" ? "asc" : "desc"}`;
+      } else {
+        //点击的不是同一个按钮
+        newOrder = `${flag}:${"desc"}`;
+      }
+      //将新的order赋予searchParams
+      this.searchParams.order = newOrder;
+      this.getData();
+    },
   },
   //数据监听：监听组件实例身上的属性的属性值变化
   watch: {
