@@ -12,11 +12,14 @@
         <a href="javascript:void(0);">更多</a>
       </div>
     </div>
+    <!-- 平台售卖属性的地方 -->
     <div class="type-wrap" v-for="(attr, index) in attrsList" :key="attr.attrId">
+      <!-- 平台售卖属性：比如说颜色 -->
       <div class="fl key">{{attr.attrName}}</div>
       <div class="fl value">
         <ul class="type-list">
-          <li v-for="(attrValue, index) in attr.attrValueList" :key="index">
+          <!-- 平台相应售卖属性的属性值：粉色蓝色... -->
+          <li v-for="(attrValue, index) in attr.attrValueList" :key="index" @click="attrInfo(attr, attrValue)">
             <a>{{attrValue}}</a>
           </li> 
         </ul>
@@ -40,6 +43,11 @@ import { mapGetters } from "vuex";
       //老师问题：在哪个组件中发请求，父组件
       //为什么呢，因为父组件中的searchParams参数是带给服务器参数，子组件把点击的品牌信息，需要给父组件传递过去---自定义事件
       this.$emit('trademarkInfo', trademark)
+    },
+    //平台售卖属性值的点击事件
+    attrInfo(attr, attrValue){
+      // console.log(attrValue, attr.attrName);
+      this.$emit('attrInfo', attr, attrValue);
     }
   }
   }

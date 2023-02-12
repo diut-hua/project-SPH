@@ -25,11 +25,19 @@
               {{ searchParams.trademark.split(":")[1]
               }}<i @click="removeTradeMark">×</i>
             </li>
+            <!-- 平台的售卖属性值的面包屑 -->
+            <li
+              class="with-x"
+              v-for="(attrValue, index) in searchParams.props"
+              :key="index"
+            >
+              {{ attrValue.split(":")[1] }}<i @click="removeAttr(index)">×</i>
+            </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector @trademarkInfo="trademarkInfo" />
+        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo" />
 
         <!--details-->
         <div class="details clearfix">
@@ -254,6 +262,25 @@ export default {
       //再次发请求
       this.getData();
     },
+    //收集平台属性地方回调函数（自定义事件）
+    attrInfo(attr, attrValue) {
+      //["属性ID:属性值:属性名"]
+      // console.log(`${attr.attrId}:${attrValue}:${attr.attrName}`);
+      //参数格式整理好
+      let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
+      //数组去重
+      //if语句里面只有一行代码，可以省略大花括号
+      if (this.searchParams.props.indexOf(props) == -1) this.searchParams.props.push(props);
+      //再次发请求
+      this.getData();
+    },
+    //删除售卖属性
+    removeAttr(index){
+      //再次整理参数
+      this.searchParams.props.splice(index, 1);
+      //再次发请求
+      this.getData();
+    }
   },
   //数据监听：监听组件实例身上的属性的属性值变化
   watch: {
