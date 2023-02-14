@@ -8,7 +8,7 @@ import Detail from '@/pages/Detail'
 //路由配置的信息
 export default [
   {
-    path: "/detail/:skuid",
+    path: "/detail/:skuId",
     component: Detail,
     meta: { showFooter: true }
   }
