@@ -78,9 +78,10 @@
               >
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
-                      ><img :src="good.defaultImg"
-                    /></a>
+                    <!-- 在路由跳转的时候切记别忘记带id（params）参数 -->
+                    <router-link :to="`/detail/${good.id}`">
+                      <img :src="good.defaultImg"/>
+                    </router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -118,7 +119,7 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <Pagination />
+          <Pagination :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :total="total" :continues="5" @getPageNo="getPageNo"/>
         </div>
       </div>
     </div>
@@ -127,7 +128,7 @@
 
 <script>
 import SearchSelector from "./SearchSelector/SearchSelector";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "Search",
@@ -183,8 +184,13 @@ export default {
     this.getData();
   },
   computed: {
+    //mapGetters里面的写法：传递的数组，因为getters计算是没有划分模块【home, search】
     ...mapGetters({
       goodsList: ["goodsList"],
+    }),
+    //获取search模块展示产品一共多少数据
+    ...mapState({
+      total: state =>state.search.searchList.total
     }),
     isOne() {
       return this.searchParams.order.indexOf("1") != -1;
@@ -288,6 +294,14 @@ export default {
       this.searchParams.order = newOrder;
       this.getData();
     },
+    //自定义事件的回调函数，---获取当前第几页
+    getPageNo(pageNo){
+      //整理带给服务器的参数
+      this.searchParams.pageNo = pageNo;
+      //再次发请求
+      this.getData();
+      
+    }
   },
   //数据监听：监听组件实例身上的属性的属性值变化
   watch: {
