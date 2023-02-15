@@ -4,9 +4,26 @@ import Search from '@/pages/Search'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
 import Detail from '@/pages/Detail'
+import AddCartSuccess from '@/pages/AddCartSuccess'
+import ShopCart from '@/pages/ShopCart'
 
 //路由配置的信息
 export default [
+  {
+    path: "/shopcart",
+    name:'shopcart',
+    component: ShopCart,
+    meta: { showFooter: true }
+    
+  }
+  ,
+  {
+    path: "/addcartsuccess",
+    name:'addcartsuccess',
+    component: AddCartSuccess,
+    meta: { showFooter: true }
+  }
+  ,
   {
     path: "/detail/:skuId",
     component: Detail,
@@ -22,8 +39,8 @@ export default [
   {
     path: "/search/:keyword?",
     component: Search,
-    meta: { showFooter: true },
     name: "search",
+    meta: { showFooter: true },
     //路由组件能不能传递props数据？
     //布尔值写法:params
     // props:true,
