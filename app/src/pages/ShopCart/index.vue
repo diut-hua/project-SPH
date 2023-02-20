@@ -52,7 +52,7 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" />
+        <input class="chooseAll" type="checkbox" :checked='isAllChecked' />
         <span>全选</span>
       </div>
       <div class="option">
@@ -97,9 +97,15 @@ export default {
     totalPrice(){
       let sum = 0;
       this.cartInfoList.forEach(item => {
-        sum+=item.skuNum*skuPrice;
+        sum+=item.skuNum*item.skuPrice;
       });
       return sum;
+    },
+    //判断底部复选框是否勾选【全部产品都选中，才勾选】
+    isAllChecked(){
+      //遍历数组里面元素，只要全部元素isChecked属性都为1====？真 true
+      //只要有一个不是1====>假 false
+      return this.cartInfoList.every(item=>item.isChecked == 1);
     }
   },
 };
