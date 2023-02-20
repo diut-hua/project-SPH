@@ -1,7 +1,13 @@
 import { reqCartList } from "@/api";
 
-const state = {};
-const mutations = {};
+const state = {
+  cartList:[],
+};
+const mutations = {
+  GETCARTLIST(state, cartList){
+    state.cartList = cartList;
+  }
+};
 const actions = {
   //获取购物车列表数据
   async getCartList({commit}){
@@ -12,7 +18,11 @@ const actions = {
     }
   },
 };
-const getters = {};
+const getters = {
+  cartList(state){
+      return state.cartList[0]||{}
+  }
+};
 export default{
   state,
   mutations,
